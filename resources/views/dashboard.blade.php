@@ -608,7 +608,7 @@
                 <div class="d-flex">
                   <img src="{{ asset('assets/images/faces/face1.jpg') }}" alt="user">
                   <div>
-                    <p class="text-info mb-1">Isabella Becker</p>
+                    <p class="text-info mb-1">Isabella Beckerall</p>
                     <p class="mb-0">Sales dashboard have been created</p>
                     <small>9:30 am</small>
                   </div>
