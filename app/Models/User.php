@@ -16,10 +16,18 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $table = 'users';
+    protected $primaryKey = 'id';
+
     protected $fillable = [
-        'name',
+        'nama_user',
+        'username',
         'email',
         'password',
+        'id_jenis_user',
+        'no_hp',
+        'wa',
+        'pin'
     ];
 
     /**
@@ -44,4 +52,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+        // Dalam Model User
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isUser()
+    {
+        return $this->role === 'user';
+    }
+
 }

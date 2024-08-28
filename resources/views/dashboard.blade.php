@@ -585,7 +585,7 @@
           <div class="col-md-12 stretch-card grid-margin grid-margin-md-0">
             <div class="card data-icon-card-primary">
               <div class="card-body">
-                <p class="card-title text-white">Number of Meetings</p>
+                <p class="card-title text-white">Number of mmm Meetings</p>
                 <div class="row">
                   <div class="col-8 text-white">
                     <h3>34040</h3>
@@ -688,4 +688,11 @@
         </div>
       </div>
   <!-- content-wrapper ends -->
+@endsection
+
+@section('csspage')
+    <!-- <link rel="stylesheet" href="{{asset('assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}"> -->
+    <link rel="stylesheet" href="{{asset('assets/vendors/datatables.net-bs5/dataTables.bootstrap5.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/vendors/ti-icons/css/themify-icons.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/js/select.dataTables.min.css')}}">
 @endsection
