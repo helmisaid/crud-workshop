@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Skydash Admin</title>
+    <title>Perpustakaan Nasional</title>
     <!-- plugins:css -->
     @include('layouts.plugincss')
     <!-- endinject -->
@@ -14,7 +14,7 @@
     <!-- inject:css -->
     @include('layouts.globalcss')
     <!-- endinject -->
-    <link rel="shortcut icon" href="{{asset('assets/images/favicon.png') }}" />
+    <link rel="shortcut icon" href="{{asset('assets/images/logoperpusnasional.png') }}" />
   </head>
   <body>
     <div class="container-scroller">
@@ -52,10 +52,46 @@
     <script src="{{ asset('assets/js/settings.js') }}"></script>
     <script src="{{ asset('assets/js/todolist.js') }}"></script>
     <!-- endinject -->
+
+
+<!-- SweetAlert2 JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $('.delete-form').on('submit', function(e) {
+            e.preventDefault();
+            var form = this;
+            Swal.fire({
+                title: "Anda yakin?",
+                text: "Data menu akan dihapus!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, hapus!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+
+        
+        // Cek jika ada session flash message 'success'
+        @if(session('success'))
+            Swal.fire({
+                title: "Berhasil!",
+                text: "{{ session('success') }}", // Menampilkan pesan sukses dari session
+                icon: "success",
+                confirmButtonText: "OK"
+            });
+        @endif
+
+    });
+</script>
+
     <!-- Custom js for this page-->
-    <script src="{{ asset('assets/js/jquery.cookie.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/js/dashboard.js') }}"></script>
-    <!-- <script src="assets/js/Chart.roundedBarCharts.js"></script> -->
+    @yield('jspage')
     <!-- End custom js for this page-->
   </body>
 </html>

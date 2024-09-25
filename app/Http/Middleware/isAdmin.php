@@ -16,10 +16,10 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-    if (Auth::check() && Auth::user()->id_jenis_user == 'admin') {
-        return $next($request);
-    } else {
-        return abort(403, 'Unauthorized action.');
-    }
+        if (Auth::check() && Auth::user()->id_jenis_user == '1') {
+            return $next($request);
+        } else {
+            return abort(403, 'Unauthorized action.');
+        }
     }
 }

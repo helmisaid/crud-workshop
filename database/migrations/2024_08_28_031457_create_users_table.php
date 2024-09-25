@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('no_hp', 30)->nullable();
             $table->string('wa', 30)->nullable();
             $table->string('pin', 30)->nullable();
-            $table->enum('id_jenis_user', ['admin', 'user'])->default('user');
+            $table->unsignedBigInteger('id_jenis_user')->default(2); // Mengubah kolom id_jenis_user menjadi foreign key
             // $table->boolean('status')->default(true);
             $table->string('create_by', 30)->nullable();
             $table->string('update_by', 30)->nullable();
@@ -28,6 +28,9 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
+
+            // Menambahkan foreign key constraint
+            $table->foreign('id_jenis_user')->references('id_jenis_user')->on('jenis_user')->onDelete('cascade');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Seeders\MenuSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,7 +24,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CategoriesSeeder::class,
             BukuSeeder::class,
-            UserSeeder::class
+            JenisUserSeeder::class,
+            UserSeeder::class,
+            MenuLevelSeeder::class,
+            MenuSeeder::class
         ]);
     }
 

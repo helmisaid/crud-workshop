@@ -83,6 +83,15 @@
     <script src="{{ asset('assets/js/todolist.js') }}"></script>
     <!-- endinject -->
     <script>
+      @if(Session::has('success'))
+        Swal.fire({
+            title: 'Success!',
+            text: '{{ Session::get('success') }}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    @endif
+
       const togglePassword = document.querySelector('#togglePassword');
       const password = document.querySelector('#password');
       togglePassword.addEventListener('click', function (e) {
@@ -104,6 +113,9 @@
         this.classList.toggle('mdi-eye');
         this.classList.toggle('mdi-eye-off');
       });
+
+      // Tambahkan sweetalert untuk login berhasil
+     
     </script>
   </body>
 </html>

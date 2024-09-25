@@ -26,11 +26,6 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            // if (Auth::user()->id_jenis_user == 'admin') {
-            //     return redirect()->intended('dashboard');
-            // } else {
-            //     return redirect()->intended('home');
-            // }
             return redirect()->intended('dashboard');
         }
 
@@ -56,10 +51,9 @@ class AuthController extends Controller
             'email' => $request->email,
             'username' => $request->username,
             'password' => bcrypt($request->password),
-            'id_jenis_user' => 'user',
+            'id_jenis_user' => '2',
         ]);
 
-        Session::flash('message', 'Register Berhasil. Akun Anda sudah Aktif silahkan Login menggunakan username dan password.');
-        return redirect('login');
+        return redirect('login')->with('success', 'Registrasi berhasil! Anda sekarang dapat login.');
     }
 }

@@ -22,3 +22,9 @@
     </div>
   </div>
 @endsection
+
+@section('jspage')
+    <script>
+      
+    </script>
+@endsection

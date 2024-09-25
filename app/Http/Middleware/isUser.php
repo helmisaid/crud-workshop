@@ -16,7 +16,7 @@ class isUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-    if (Auth::check() && Auth::user()->id_jenis_user == 'user') {
+    if (Auth::check() && Auth::user()->id_jenis_user == '2' || Auth::user()->id_jenis_user == '1') {
         return $next($request);
     } else {
         return redirect()->route('login');

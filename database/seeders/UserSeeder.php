@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
                     'no_hp' => '081234567890',
                     'wa' => '081234567890',
                     'pin' => '1234',
-                    'id_jenis_user' => 'admin',
+                    'id_jenis_user' => '1',
                     'create_by' => 'system',
                     'update_by' => 'system'
                 ]

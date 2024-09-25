@@ -16,26 +16,59 @@
                 <th> Aksi </th>
               </tr>
             </thead>
-            <tbody>
-              @foreach($categories as $category)
-              <tr>
-                <td> {{ $category->id_kategori }} </td>
-                <td> {{ $category->nama_kategori }} </td>
-                <td> {{ $category->created_at ? $category->created_at->format('M d, Y') : 'Tidak Tersedia' }} </td>
-                <td>
-                  <a href="{{ route('categories.edit', $category->id_kategori) }}" class="btn btn-success btn-sm"><i class="ti ti-pencil"></i></a>
-                  <form action="{{ route('categories.destroy', $category->id_kategori) }}" method="POST" style="display: inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')"><i class="ti ti-trash"></i></button>
-                  </form>
-                </td>
-              </tr>
-              @endforeach
+            <tbody id="categories-table-body">
+                <!-- Data kategori akan dimuat oleh JavaScript -->
             </tbody>
           </table>
         </div>
       </div>
     </div>
   </div>
+@endsection
+
+@section('jspage')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+   $(document).ready(function() {
+    // Fungsi untuk memuat data kategori
+    function loadCategories() {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/api/categories',
+            type: 'GET',
+            success: function(response) {
+                var categoriesTableBody = $('#categories-table-body');
+                categoriesTableBody.empty();
+                $.each(response.data, function(index, category) {
+                    categoriesTableBody.append(`
+                        <tr>
+                            <td>${category.id_kategori}</td>
+                            <td>${category.nama_kategori}</td>
+                            <td>${category.created_at ? category.created_at : 'Tidak Tersedia'}</td>
+                            <td>
+                                <a href="/categories/${category.id_kategori}/edit" class="btn btn-success btn-sm">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <form action="/categories/${category.id_kategori}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm delete-btn">
+                                        <i class="ti ti-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    `);
+                });
+            },
+            error: function(xhr, status, error) {
+                alert('Error loading categories: ' + error);
+            }
+        });
+    }
+
+    // Memanggil fungsi untuk memuat data kategori
+    loadCategories();
+});
+
+</script>
 @endsection
