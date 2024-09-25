@@ -6,7 +6,7 @@ use App\Models\Menu;
 use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+# ssssssssss
 class CategoriesController extends Controller
 {
     public function Get_Data_Category() {
