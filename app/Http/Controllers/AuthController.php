@@ -51,7 +51,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'username' => $request->username,
             'password' => bcrypt($request->password),
-            'id_jenis_user' => 'mahasiswa',
+            'id_jenis_user' => '2',
         ]);
 
         return redirect('login')->with('success', 'Registrasi berhasil! Anda sekarang dapat login.');
