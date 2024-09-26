@@ -19,6 +19,7 @@ class JenisUserSeeder extends Seeder
             ['jenis_user' => 'guest'],
             ['jenis_user' => 'superadmin'],
             ['jenis_user' => 'editor'],
+            ['jenis_user' => 'Staff Perpustakaan']
         ]);
     }
 }

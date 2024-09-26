@@ -6,6 +6,7 @@ use App\Models\Menu;
 use App\Models\MenuLevel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MenuLevelController extends Controller
 {
@@ -13,7 +14,7 @@ class MenuLevelController extends Controller
     
     public function index()
     {
-        $user = Auth::user(); // Dapatkan user yang sedang login
+        $user = Auth::user(); 
         $menus = Menu::whereIn('menu_id', function ($query) use ($user) {
             $query->select('menu_id')
                 ->from('setting_menu_user')
@@ -26,7 +27,7 @@ class MenuLevelController extends Controller
 
     public function create()
     {
-        $user = Auth::user(); // Dapatkan user yang sedang login
+        $user = Auth::user(); 
         $menus = Menu::whereIn('menu_id', function ($query) use ($user) {
             $query->select('menu_id')
                 ->from('setting_menu_user')
