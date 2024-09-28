@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\DashboardController;
@@ -84,6 +85,9 @@ Route::prefix('settingmenuuser')->middleware(['auth', isAdmin::class])->name('se
     Route::put('/{settingMenuUser}', [SettingMenuUserController::class, 'update'])->name('update');
     Route::delete('/{settingMenuUser}', [SettingMenuUserController::class, 'destroy'])->name('destroy');
 });
+
+Route::resource('post', PostController::class);
+
 Route::get('/login', [AuthController::class, 'indexlogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/logout', [AuthController::class, 'actionlogout'])->name('logout');

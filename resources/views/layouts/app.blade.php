@@ -14,7 +14,9 @@
     <!-- inject:css -->
     @include('layouts.globalcss')
     <!-- endinject -->
-    <link rel="shortcut icon" href="{{asset('assets/images/logoperpusnasional.png') }}" />
+    {{-- <script src="https://cdn.ckeditor.com/ckeditor5/43.1.1/ckeditor5.js"></script> --}}
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.1.1/ckeditor5.css" />
+
   </head>
   <body>
     <div class="container-scroller">
@@ -37,6 +39,36 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.1.1/ckeditor5.js",
+                "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.1.1/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import {
+            ClassicEditor,
+            Essentials,
+            Bold,
+            Italic,
+            Font,
+            Paragraph
+        } from 'ckeditor5';
+
+        ClassicEditor
+            .create( document.querySelector( '#post' ), {
+                plugins: [ Essentials, Bold, Italic, Font, Paragraph ],
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+                ]
+            } )
+            .then( /* ... */ )
+            .catch( /* ... */ );
+    </script>
     <script src="{{ asset('assets/vendors/js/vendor.bundle.base') }}.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
@@ -56,6 +88,7 @@
 
 <!-- SweetAlert2 JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- <script src="https://cdn.ckeditor.com/ckeditor5/43.1.1/ckeditor5.js"></script> --}}
 <script>
     $(document).ready(function() {
         $('.delete-form').on('submit', function(e) {
@@ -76,22 +109,27 @@
             });
         });
 
-        
+
         // Cek jika ada session flash message 'success'
-        @if(session('success'))
-            Swal.fire({
-                title: "Berhasil!",
-                text: "{{ session('success') }}", // Menampilkan pesan sukses dari session
-                icon: "success",
-                confirmButtonText: "OK"
-            });
-        @endif
 
+
+    // <script type="importmap">
+    //     {
+    //         "imports": {
+    //             "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.1.1/ckeditor5.js",
+    //             "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.1.1/",
+    //             "ckeditor5-premium-features": "https://cdn.ckeditor.com/ckeditor5-premium-features/43.1.1/ckeditor5-premium-features.js",
+    //             "ckeditor5-premium-features/": "https://cdn.ckeditor.com/ckeditor5-premium-features/43.1.1/"
+    //         }
+    //     }
+    // </script>
+    // <script type="module" src="{{ URL::asset('assets/vendor/ckeditor5.js') }}"></script>
     });
-</script>
 
+</script>
     <!-- Custom js for this page-->
     @yield('jspage')
+
     <!-- End custom js for this page-->
   </body>
 </html>
