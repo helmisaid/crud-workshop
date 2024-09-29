@@ -15,7 +15,7 @@ class PostSeeder extends Seeder
     public function run(): void
     {
         DB::table('posts')->insert([
-            'post_id' => Str::uuid(),
+            'post_id' => 1,
             'sender' => 'user123', // Nama pengguna atau username sementara
             'message_text' => 'Ini adalah pesan sementara untuk testing.',
             'message_image' => 'https://example.com/image.jpg', // Bisa disesuaikan

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('post_comments', function (Blueprint $table) {
-            $table->string('comment_id', 30)->primary();
-            $table->string('post_id', 30);
+            $table->id('comment_id')->primary();
+            $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id');
             $table->text('comment_text');
             $table->string('comment_image', 200)->nullable();

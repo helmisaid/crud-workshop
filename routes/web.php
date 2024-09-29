@@ -5,6 +5,7 @@ use App\Http\Middleware\isAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BmkgController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PostController;
@@ -94,13 +95,18 @@ Route::prefix('post')->group(function () {
     Route::get('/{post}/edit', [PostController::class, 'edit'])->name('post.edit');
     Route::put('/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/{post}', [PostController::class, 'destroy'])->name('post.destroy');
-    Route::post('/post/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
-Route::post('/post/{post}/comment', [PostController::class, 'commentPost'])->name('post.comment');
 });
 
+Route::post('/post/{post_id}/like', [PostController::class, 'like'])->name('post.like');
+Route::post('/post/{post_id}/comment', [PostController::class, 'comment'])->name('comments.store');
 
 
 
+Route::get('/gempa', [BmkgController::class, 'gempa']);
+
+Route::get('/cuaca', function () {
+    return view('bmkg.cuaca');
+})->name('cuaca')->middleware('auth');
 
 Route::get('/login', [AuthController::class, 'indexlogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');

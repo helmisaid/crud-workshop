@@ -12,7 +12,7 @@ class PostComment extends Model
     protected $table = 'post_comments';
     protected $primaryKey = 'comment_id';
 
-
+    public $timestamps = false;
     protected $fillable = [
         'comment_id',
         'post_id',
@@ -31,4 +31,11 @@ class PostComment extends Model
     {
         return $this->belongsTo(Post::class, 'post_id', 'post_id');
     }
+
+    // In Comment.php model
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id'); // Make sure 'user_id' is the foreign key in the comments table
+    }
+
 }
