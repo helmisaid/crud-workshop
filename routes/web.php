@@ -86,7 +86,19 @@ Route::prefix('settingmenuuser')->middleware(['auth', isAdmin::class])->name('se
     Route::delete('/{settingMenuUser}', [SettingMenuUserController::class, 'destroy'])->name('destroy');
 });
 
-Route::resource('post', PostController::class);
+Route::prefix('post')->group(function () {
+    Route::get('/', [PostController::class, 'index'])->name('post.index');
+    Route::get('/create', [PostController::class, 'create'])->name('post.create');
+    Route::post('/', [PostController::class, 'store'])->name('post.store');
+    Route::get('/{post}', [PostController::class, 'show'])->name('post.show');
+    Route::get('/{post}/edit', [PostController::class, 'edit'])->name('post.edit');
+    Route::put('/{post}', [PostController::class, 'update'])->name('post.update');
+    Route::delete('/{post}', [PostController::class, 'destroy'])->name('post.destroy');
+    Route::post('/post/{post}/like', [PostController::class, 'likePost'])->name('post.like');
+Route::post('/post/{post}/comment', [PostController::class, 'commentPost'])->name('post.comment');
+});
+
+
 
 Route::get('/login', [AuthController::class, 'indexlogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');

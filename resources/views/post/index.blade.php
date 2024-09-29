@@ -4,16 +4,27 @@
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Create a post</h4>
+            <h4 class="card-title">Create your own post now</h4>
+
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group">
-                    <label for="editor">Postingan</label>
-                    <textarea id="post" name="message_text" class="form-control" rows="3"></textarea>
+                    <label for="editor">Message</label>
+                    <textarea id="post" name="message_text" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="post_image">Gambar</label>
+                    <label for="post_image">Image</label>
                     <input type="file" id="post_image" name="post_image" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -22,65 +33,123 @@
     </div>
 </div>
 
-<div class="col-lg-12 grid-margin stretch-card mt-4">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Daftar Postingan</h4>
-
-            @if($posts->count() > 0)
-                <div class="row">
-                    @foreach($posts as $post)
-    <div class="col-md-12 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <h5 class="card-title">
-                        {{ $post->sender }}
-                        <span>
-                            <small class="text-muted">{{ $post->formatted_date }}</small>
-                        </span>
-                    </h5>
-                    <!-- Logo Tiga Titik -->
-                    <div class="nav-item nav-profile dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
-                            &#x22EE; <!-- Simbol tiga titik -->
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-                            <a class="dropdown-item" href="{{ route('post.edit', $post->post_id) }}">
-                                <i class="ti-pencil-alt text-primary"></i> Update
-                            </a>
-                            <form action="{{ route('post.destroy', $post->post_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus postingan ini?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="dropdown-item">
-                                    <i class="ti-trash text-danger"></i> Delete
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                </div>
-
-                @if($post->post_image)
-                    <img src="{{ asset('storage/' . $post->post_image) }}" class="img-fluid mb-3" alt="Image">
-                @endif
-                <p class="card-text">{!! $post->message_text !!}</p>
-            </div>
-            <div class="card-footer">
-                <small class="text-muted">Dibuat pada: {{ $post->create_date }}</small>
-            </div>
-        </div>
-    </div>
-@endforeach
-
-                </div>
-            @else
-                <p>Tidak ada postingan tersedia.</p>
-            @endif
-        </div>
-    </div>
+<div class="col-lg-12 grid-margin  mt-4" id="post-list">
+    <!-- Posting akan dimuat di sini oleh AJAX -->
 </div>
+
 @endsection
 
 @section('jspage')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function updatePostTimes() {
+            const postTimes = document.querySelectorAll('.post-time');
+            postTimes.forEach(function(postTime) {
+                const createDate = new Date(postTime.getAttribute('data-create-date'));
+                const currentTime = new Date();
+                const diffTime = Math.abs(currentTime - createDate);
+                const diffMinutes = Math.floor(diffTime / (1000 * 60));
+                const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+                let formattedTime;
+
+                if (diffMinutes < 60) {
+                    formattedTime = `${diffMinutes} menit yang lalu`;
+                } else if (diffHours < 24) {
+                    formattedTime = `${diffHours} jam yang lalu`;
+                } else {
+                    formattedTime = `${diffDays} hari yang lalu`;
+                }
+
+                const formattedDate = createDate.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                });
+
+                const formattedTimeWithDate = `${formattedTime} - ${formattedDate}`;
+
+                postTime.textContent = formattedTimeWithDate;
+            });
+        }
+
+        // Perbarui waktu setiap 60 detik
+        setInterval(updatePostTimes, 60000);
+
+        // Jalankan segera setelah halaman dimuat
+        updatePostTimes();
+    });
+
+
+</script>
+<script>
+    function loadPosts() {
+        $.ajax({
+            url: "{{ route('posts.list') }}", // Ganti dengan route yang benar
+            method: 'GET',
+            success: function(posts) {
+            $('#post-list').empty(); // Kosongkan daftar sebelum menambahkan yang baru
+            posts.forEach(function(post) {
+                $('#post-list').append(`
+                    <div class="col-md-12 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body border-solid border">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center py-4">
+                                        <img src="{{ asset('/assets/images/faces/face28.jpg') }}" alt="Profile" class="rounded-circle me-2" width="40" height="40">
+                                        <div>
+                                            <h5 class="card-title mb-0">${post.sender}</h5>
+                                            <small class="text-muted post-time" data-create-date="${post.created_at}">${post.formatted_date}</small>
+                                        </div>
+                                    </div>
+                                    <div class="nav-item nav-profile dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
+                                    &#x22EE; <!-- Simbol tiga titik -->
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                                    <a class="dropdown-item" href="{{ url('post') }}/${post.post_id}/edit">
+                                        <i class="ti-pencil-alt text-primary"></i> Update
+                                    </a>
+                                    <form action="{{ url('post') }}/${post.post_id}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus postingan ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="ti-trash text-danger"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                                </div>
+                                ${post.post_image ? `<img src="{{ asset('storage/') }}/${post.post_image}" class="img-fluid mb-3" alt="Image">` : ''}
+                                <p class="card-text">${post.message_text}</p>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-link" onclick="likePost(${post.post_id})"> Like</button>
+                                <button class="btn btn-link" onclick="showCommentBox(${post.post_id})">Comment</button>
+                                <div id="comment-box-${post.post_id}" class="mt-3 d-none">
+                                    <textarea class="form-control mb-2" placeholder="Write a comment..." rows="2"></textarea>
+                                    <button class="btn btn-primary btn-sm" onclick="submitComment(${post.post_id})">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            });
+        },
+
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        loadPosts(); // Panggil loadPosts saat halaman dimuat
+        setInterval(loadPosts, 2000); // Panggil loadPosts setiap 1 detik
+    });
+</script>
+
+
 @endsection

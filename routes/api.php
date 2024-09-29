@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\MenuLevelController;
@@ -24,6 +25,9 @@ Route::get('/users', [UserController::class, 'Get_Data_User']);
 Route::get('/bukus', [BukuController::class, 'Get_Data_Buku']);
 Route::get('/categories', [CategoriesController::class, 'Get_Data_Category']);
 Route::get('/menus', [MenuController::class, 'Get_Data_Menus'])->middleware('auth:sanctum');
+// web.php
+Route::get('/posts', [PostController::class, 'getPosts'])->name('posts.list');
+
 // Route::post('/menu-levels', [MenuLevelController::class, 'Get_Data_Level'])->middleware('auth:sanctum');
 // Route::post('/setting-menu-users', [SettingMenuUserController::class, 'Get_Data_Setting'])->middleware('auth:sanctum');
 // Route::put('/users/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');

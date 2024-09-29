@@ -9,9 +9,26 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
+
+    public function getPosts()
+    {
+        $posts = Post::orderBy('create_date', 'desc')->get();
+
+        foreach ($posts as $post) {
+            if (Carbon::parse($post->create_date)->isToday()) {
+                $post->formatted_date = 'Hari ini, ' . Carbon::parse($post->create_date)->format('H:i');
+            } else {
+                $post->formatted_date = Carbon::parse($post->create_date)->format('d M Y, H:i');
+            }
+        }
+
+        return response()->json($posts);
+    }
+
     public function index()
     {
         $user = Auth::user(); // Dapatkan user yang sedang login
@@ -22,25 +39,23 @@ class PostController extends Controller
                 ->where('delete_mark', false);
         })->get();
 
-        $posts = Post::orderBy('create_date', 'desc')->get();
-
-        foreach ($posts as $post) {
-            if (Carbon::parse($post->create_date)->isToday()) {
-                $post->formatted_date = 'Hari ini, ' . Carbon::parse($post->create_date)->format('H:i');
-            } else {
-                $post->formatted_date = Carbon::parse($post->create_date)->format('d M Y, H:i');
-            }
-        }
-        return view('post.index', compact('posts', 'menus'));
+        $post = Post::all();
+        return view('post.index', compact('menus', 'post'));
     }
 
     public function store(Request $request)
 {
     // Validasi input
-    $request->validate([
+    $validator = Validator::make($request->all(), [
         'message_text' => 'required|string',
         'post_image' => 'nullable|mimes:jpeg,png,jpg|max:2048',
     ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()
+                         ->withErrors($validator) // Kirim pesan kesalahan ke view
+                         ->withInput(); // Kembalikan input sebelumnya
+    }
 
     $username = Auth::user()->username;
 
@@ -68,7 +83,7 @@ class PostController extends Controller
     // Mengirim pesan sukses atau gagal
     if ($post) {
         // Redirect dengan pesan sukses
-        return redirect()->route('post.index')->with(['success' => 'Data Berhasil Disimpan!']);
+        return redirect()->route('post.index')->with(['success' => 'Data Berhasil Disimpan!'])->with('reload', true);
     } else {
         // Redirect dengan pesan error
         return redirect()->route('post.index')->with(['error' => 'Data Gagal Disimpan!']);
