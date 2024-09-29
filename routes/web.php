@@ -16,11 +16,13 @@ use App\Http\Controllers\MenuLevelController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\SettingMenuUserController;
 
-Route::get('/home', function () {
+use App\Http\Controllers\MessageController;
+Route::get('/', function () {
     return view('welcome');
 })->name('home')->middleware('auth');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+Route::get('/random', [DashboardController::class, 'random'])->name('random')->middleware('auth');
 
 
 
@@ -100,7 +102,15 @@ Route::prefix('post')->group(function () {
 Route::post('/post/{post_id}/like', [PostController::class, 'like'])->name('post.like');
 Route::post('/post/{post_id}/comment', [PostController::class, 'comment'])->name('comments.store');
 
+Route::prefix('messages')->group(function () {
+    Route::get('/', [MessageController::class, 'index'])->name('messages.index');
+    Route::post('/send', [MessageController::class, 'store'])->name('messages.send');
+    Route::get('/{message}', [MessageController::class, 'show'])->name('messages.show');
 
+    Route::get('/{message}/edit', [MessageController::class, 'edit'])->name('messages.edit');
+    Route::put('/{message}', [MessageController::class, 'update'])->name('messages.update');
+    Route::delete('/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
+});
 
 Route::get('/gempa', [BmkgController::class, 'gempa']);
 
