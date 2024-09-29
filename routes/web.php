@@ -94,9 +94,11 @@ Route::prefix('post')->group(function () {
     Route::get('/{post}/edit', [PostController::class, 'edit'])->name('post.edit');
     Route::put('/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/{post}', [PostController::class, 'destroy'])->name('post.destroy');
-    Route::post('/post/{post}/like', [PostController::class, 'likePost'])->name('post.like');
+    Route::post('/post/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
 Route::post('/post/{post}/comment', [PostController::class, 'commentPost'])->name('post.comment');
 });
+
+
 
 
 

@@ -27,7 +27,7 @@
                     <label for="post_image">Image</label>
                     <input type="file" id="post_image" name="post_image" class="form-control">
                 </div>
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-primary">Kirim</button>
             </form>
         </div>
     </div>
@@ -42,70 +42,59 @@
 @section('jspage')
 <script>
     function loadPosts() {
-        $.ajax({
-            url: "{{ route('posts.list') }}", // Ganti dengan route yang benar
-            method: 'GET',
-            success: function(posts) {
-            $('#post-list').empty(); // Kosongkan daftar sebelum menambahkan yang baru
-            posts.forEach(function(post) {
-                $('#post-list').append(`
-                    <div class="col-md-12 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body border-solid border">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="d-flex align-items-center py-4">
-                                        <img src="{{ asset('/assets/images/faces/face28.jpg') }}" alt="Profile" class="rounded-circle me-2" width="40" height="40">
-                                        <div>
-                                            <h5 class="card-title mb-0">${post.sender}</h5>
-                                            <small class="text-muted post-time" data-create-date="${post.created_at}">${post.formatted_date}</small>
-                                        </div>
+    $.ajax({
+    url: "{{ route('posts.list') }}?t=" + new Date().getTime(),
+    method: 'GET',
+    success: function(posts) {
+        $('#post-list').empty();
+        posts.forEach(function(post) {
+            $('#post-list').append(`
+                <div class="col-md-12 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body border-solid border">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center py-4">
+                                    <img src="{{ asset('/assets/images/faces/face28.jpg') }}" alt="Profile" class="rounded-circle me-2" width="40" height="40">
+                                    <div>
+                                        <h5 class="card-title mb-0">${post.sender}</h5>
+                                        <small class="text-muted post-time" data-create-date="${post.created_at}">${post.formatted_date}</small>
                                     </div>
-                                    <div class="nav-item nav-profile dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
-                                    &#x22EE; <!-- Simbol tiga titik -->
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                                </div>
+                                <div class="nav-item nav-profile dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
+                                        &#x22EE; <!-- Simbol tiga titik -->
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
                                         <a class="dropdown-item" href="{{ url('post') }}/${post.post_id}/edit">
-                                                <i class="ti-pencil-alt text-primary"></i> Update
-                                            </a>
-                                            <form action="{{ url('post') }}/${post.post_id}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus postingan ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="dropdown-item">
-                                                    <i class="ti-trash text-danger"></i> Delete
-                                                </button>
-                                            </form>
-                                        </div>
+                                            <i class="ti-pencil-alt text-primary"></i> Update
+                                        </a>
+                                        <form action="{{ url('post') }}/${post.post_id}" method="POST" class="d-inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item delete-btn" data-post-id="${post.post_id}">
+                                                <i class="ti-trash text-danger"></i> Delete
+                                            </button>
+                                        </form>
                                     </div>
-
-                                </div>
-                                ${post.post_image ? `<img src="{{ asset('storage/') }}/${post.post_image}" class="img-fluid mb-3" alt="Image">` : ''}
-                                <p class="card-text">${post.message_text}</p>
-                            </div>
-                            <div class="card-footer">
-                                <button class="btn btn-link" onclick="likePost(${post.post_id})"> Like</button>
-                                <button class="btn btn-link" onclick="showCommentBox(${post.post_id})">Comment</button>
-                                <div id="comment-box-${post.post_id}" class="mt-3 d-none">
-                                    <textarea class="form-control mb-2" placeholder="Write a comment..." rows="2"></textarea>
-                                    <button class="btn btn-primary btn-sm" onclick="submitComment(${post.post_id})">Submit</button>
                                 </div>
                             </div>
+                            ${post.post_image ? `<img src="{{ asset('storage/') }}/${post.post_image}" class="img-fluid mb-3" alt="Image">` : ''}
+                            <p class="card-text">${post.message_text}</p>
                         </div>
                     </div>
-                `);
-            });
-        },
-
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
+                </div>
+            `);
         });
-
+    },
+    error: function(xhr, status, error) {
+        console.error(error);
     }
+});
 
+}
     $(document).ready(function() {
-        loadPosts(); // Panggil loadPosts saat halaman dimuat
-        setInterval(loadPosts, 5000); // Panggil loadPosts setiap 1 detik
+        loadPosts();
+        setInterval(loadPosts, 20000);
     });
 </script>
 <script>
@@ -143,10 +132,11 @@
         }
 
         // Perbarui waktu setiap 60 detik
-        setInterval(updatePostTimes, 3000);
+        setInterval(updatePostTimes, 60000);
 
         // Jalankan segera setelah halaman dimuat
         updatePostTimes();
     });
 </script>
 @endsection
+

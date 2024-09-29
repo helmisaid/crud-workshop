@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Menu;
 use App\Models\Post;
+use App\Models\PostLike;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -54,43 +55,58 @@ class PostController extends Controller
 
     if ($validator->fails()) {
         return redirect()->back()
-                         ->withErrors($validator) // Kirim pesan kesalahan ke view
-                         ->withInput(); // Kembalikan input sebelumnya
+                         ->withErrors($validator)
+                         ->withInput();
     }
 
     $user = Auth::user();
-    $username = $user->username; // Ambil username
+    $username = $user->username;
     $create_by = $user->id;
 
-    // Ambil ID posting baru dengan format '001', '002', dst.
     $lastPostId = DB::table('posts')->max('post_id');
     $newPostId = str_pad((int)$lastPostId + 1, 3, '0', STR_PAD_LEFT);
 
-    // Upload image jika ada
+
     $file_name = null;
     if ($request->hasFile('post_image')) {
         $file = $request->file('post_image');
-        // Menggunakan metode store untuk menyimpan file di 'storage/app/public/uploads'
         $file_name = $file->store('uploads', 'public');
     }
 
-    // Membuat data post
+
     $post = Post::create([
         'post_id' => $newPostId,
         'sender' => $username,
         'message_text' => $request->message_text,
-        'post_image' => $file_name, // Menyimpan path relatif dari gambar
+        'post_image' => $file_name,
         'create_by' => $create_by,
     ]);
 
-    // Mengirim pesan sukses atau gagal
     if ($post) {
-        // Redirect dengan pesan sukses
         return redirect()->route('post.index')->with(['success' => 'Data Berhasil Disimpan!'])->with('reload', true);
     } else {
-        // Redirect dengan pesan error
         return redirect()->route('post.index')->with(['error' => 'Data Gagal Disimpan!']);
     }
 }
+
+public function destroy($post_id)
+{
+    // Tambahkan ini untuk memeriksa ID yang diterima
+   // Lihat nilai $post_id
+
+   $post_id = (int)$post_id; // Pastikan menjadi integer
+   $post = Post::where('post_id', $post_id)->first();
+
+    // Cek apakah post ditemukan
+    if ($post) {
+        // Hapus post
+        $post->delete();
+        return redirect()->route('post.index')->with(['success' => 'Postingan berhasil dihapus!']);
+    } else {
+        return redirect()->route('post.index')->with(['error' => 'Postingan tidak ditemukan!']);
+    }
+}
+
+
 
 }
