@@ -108,22 +108,6 @@
                 }
             });
         });
-
-
-        // Cek jika ada session flash message 'success'
-
-
-    // <script type="importmap">
-    //     {
-    //         "imports": {
-    //             "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.1.1/ckeditor5.js",
-    //             "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.1.1/",
-    //             "ckeditor5-premium-features": "https://cdn.ckeditor.com/ckeditor5-premium-features/43.1.1/ckeditor5-premium-features.js",
-    //             "ckeditor5-premium-features/": "https://cdn.ckeditor.com/ckeditor5-premium-features/43.1.1/"
-    //         }
-    //     }
-    // </script>
-    // <script type="module" src="{{ URL::asset('assets/vendor/ckeditor5.js') }}"></script>
     });
 
 </script>

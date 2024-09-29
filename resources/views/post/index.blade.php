@@ -41,49 +41,6 @@
 
 @section('jspage')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function updatePostTimes() {
-            const postTimes = document.querySelectorAll('.post-time');
-            postTimes.forEach(function(postTime) {
-                const createDate = new Date(postTime.getAttribute('data-create-date'));
-                const currentTime = new Date();
-                const diffTime = Math.abs(currentTime - createDate);
-                const diffMinutes = Math.floor(diffTime / (1000 * 60));
-                const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-                let formattedTime;
-
-                if (diffMinutes < 60) {
-                    formattedTime = `${diffMinutes} menit yang lalu`;
-                } else if (diffHours < 24) {
-                    formattedTime = `${diffHours} jam yang lalu`;
-                } else {
-                    formattedTime = `${diffDays} hari yang lalu`;
-                }
-
-                const formattedDate = createDate.toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric'
-                });
-
-                const formattedTimeWithDate = `${formattedTime} - ${formattedDate}`;
-
-                postTime.textContent = formattedTimeWithDate;
-            });
-        }
-
-        // Perbarui waktu setiap 60 detik
-        setInterval(updatePostTimes, 60000);
-
-        // Jalankan segera setelah halaman dimuat
-        updatePostTimes();
-    });
-
-
-</script>
-<script>
     function loadPosts() {
         $.ajax({
             url: "{{ route('posts.list') }}", // Ganti dengan route yang benar
@@ -108,18 +65,18 @@
                                     &#x22EE; <!-- Simbol tiga titik -->
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-                                    <a class="dropdown-item" href="{{ url('post') }}/${post.post_id}/edit">
-                                        <i class="ti-pencil-alt text-primary"></i> Update
-                                    </a>
-                                    <form action="{{ url('post') }}/${post.post_id}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus postingan ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="dropdown-item">
-                                            <i class="ti-trash text-danger"></i> Delete
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
+                                        <a class="dropdown-item" href="{{ url('post') }}/${post.post_id}/edit">
+                                                <i class="ti-pencil-alt text-primary"></i> Update
+                                            </a>
+                                            <form action="{{ url('post') }}/${post.post_id}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus postingan ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="ti-trash text-danger"></i> Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
 
                                 </div>
                                 ${post.post_image ? `<img src="{{ asset('storage/') }}/${post.post_image}" class="img-fluid mb-3" alt="Image">` : ''}
@@ -143,13 +100,53 @@
                 console.error(error);
             }
         });
+
     }
 
     $(document).ready(function() {
         loadPosts(); // Panggil loadPosts saat halaman dimuat
-        setInterval(loadPosts, 2000); // Panggil loadPosts setiap 1 detik
+        setInterval(loadPosts, 5000); // Panggil loadPosts setiap 1 detik
     });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function updatePostTimes() {
+            const postTimes = document.querySelectorAll('.post-time');
+            postTimes.forEach(function(postTime) {
+                const createDate = new Date(postTime.getAttribute('data-create-date'));
+                const currentTime = new Date();
+                const diffTime = Math.abs(currentTime - createDate);
+                const diffMinutes = Math.floor(diffTime / (1000 * 60));
+                const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
+                let formattedTime;
 
+                if (diffMinutes < 60) {
+                    formattedTime = ${diffMinutes} menit yang lalu;
+                } else if (diffHours < 24) {
+                    formattedTime = ${diffHours} jam yang lalu;
+                } else {
+                    formattedTime = ${diffDays} hari yang lalu;
+                }
+
+                const formattedDate = createDate.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                });
+
+                const formattedTimeWithDate = ${formattedTime} - ${formattedDate};
+
+                postTime.textContent = formattedTimeWithDate;
+            });
+        }
+
+        // Perbarui waktu setiap 60 detik
+        setInterval(updatePostTimes, 3000);
+
+        // Jalankan segera setelah halaman dimuat
+        updatePostTimes();
+    });
+</script>
 @endsection

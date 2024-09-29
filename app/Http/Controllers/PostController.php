@@ -39,8 +39,9 @@ class PostController extends Controller
                 ->where('delete_mark', false);
         })->get();
 
-        $post = Post::all();
-        return view('post.index', compact('menus', 'post'));
+
+
+        return view('post.index', compact('menus'));
     }
 
     public function store(Request $request)
@@ -57,7 +58,9 @@ class PostController extends Controller
                          ->withInput(); // Kembalikan input sebelumnya
     }
 
-    $username = Auth::user()->username;
+    $user = Auth::user();
+    $username = $user->username; // Ambil username
+    $create_by = $user->id;
 
     // Ambil ID posting baru dengan format '001', '002', dst.
     $lastPostId = DB::table('posts')->max('post_id');
@@ -77,7 +80,7 @@ class PostController extends Controller
         'sender' => $username,
         'message_text' => $request->message_text,
         'post_image' => $file_name, // Menyimpan path relatif dari gambar
-        'create_by' => $username,
+        'create_by' => $create_by,
     ]);
 
     // Mengirim pesan sukses atau gagal
