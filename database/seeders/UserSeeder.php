@@ -26,8 +26,19 @@ class UserSeeder extends Seeder
                     'id_jenis_user' => '1',
                     'create_by' => 'system',
                     'update_by' => 'system'
-                ]
-            )
+                ],
+                [
+                    'nama_user' => 'Arya Maulana',
+                    'username' => 'arya',
+                    'password' => bcrypt('arya123'),
+                    'email' => 'arya@gmail.com',
+                    'no_hp' => '08123456789',
+                    'wa' => '081234567890',
+                    'pin' => '1234',
+                    'id_jenis_user' => '1',
+                    'create_by' => 'system',
+                    'update_by' => 'system'
+                ]            )
         );
     }
 }

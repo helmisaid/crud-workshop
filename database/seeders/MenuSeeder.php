@@ -124,6 +124,28 @@ class MenuSeeder extends Seeder
                 'create_by' => 'admin',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+            ],
+            [
+                'menu_id' => 12,
+                'level_id' => '1',
+                'menu_name' => 'Messages',
+                'menu_link' => 'messages', // Jika ini submenu, tambahkan di parent_id
+                'menu_icon' => 'icon-grid',
+                'parent_id' => null,
+                'create_by' => 'admin',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'menu_id' => 13,
+                'level_id' => '1',
+                'menu_name' => 'Anime Anime',
+                'menu_link' => 'random', // Jika ini submenu, tambahkan di parent_id
+                'menu_icon' => 'icon-grid',
+                'parent_id' => null,
+                'create_by' => 'admin',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]
         ];
 
