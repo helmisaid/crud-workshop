@@ -12,10 +12,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('message_dokumens', function (Blueprint $table) {
-            $table->string('no_mdok', 30)->primary();
-            $table->string('file', 200);
+            $table->string('no_mdok', 255)->primary();
+            $table->string('file', 255);
             $table->string('description', 150);
-            $table->string('message_id', 30);
+            $table->string('message_id', 255);
             $table->string('create_by', 30);
             $table->timestamps();
             $table->string('delete_mark', 1)->default('0');

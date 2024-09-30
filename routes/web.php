@@ -106,11 +106,20 @@ Route::prefix('messages')->group(function () {
     Route::get('/', [MessageController::class, 'index'])->name('messages.index');
     Route::post('/send', [MessageController::class, 'store'])->name('messages.send');
     Route::get('/{message}', [MessageController::class, 'show'])->name('messages.show');
+    Route::post('/{message_id}/publish', [MessageController::class,'publish'])->name('messages.publish');
 
     Route::get('/{message}/edit', [MessageController::class, 'edit'])->name('messages.edit');
     Route::put('/{message}', [MessageController::class, 'update'])->name('messages.update');
     Route::delete('/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
+Route::get('/{message_id}/edit_draft', [MessageController::class ,'editDraft'])->name('messages.edit_draft');
+// In routes/web.php
+
+Route::post('/{message_id}/update_draft', [MessageController::class,'updateDraft'])->name('messages.update_draft');
 });
+// In routes/web.php
+
+
+Route::get('/download/document/{file}', [MessageController::class, 'downloadDocument'])->name('download.document');
 
 Route::get('/gempa', [BmkgController::class, 'gempa']);
 
