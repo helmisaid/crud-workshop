@@ -156,16 +156,6 @@ class SettingMenuSeeder extends Seeder
                 'delete_mark' => 0,
                 'deleted_at' => null,
             ],
-            [
-                'no_setting' => '17',
-                'id_jenis_user' => 1,
-                'menu_id' => 13,
-                'create_by' => 'Arya',
-                'created_at' => '2024-09-24 18:00:45',
-                'updated_at' => '2024-09-24 18:00:45',
-                'delete_mark' => 0,
-                'deleted_at' => null,
-            ]
         ]);
     }
 }
