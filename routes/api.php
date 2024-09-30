@@ -30,6 +30,7 @@ Route::get('/posts', [PostController::class, 'getPosts'])->name('posts.list');
 Route::get('/post/{post_id}/comments', [PostController::class, 'getComments'])->name('comments.list');
 Route::get('post/{id}/detail', [PostController::class, 'getPostDetail'])->name('post.detail');
 
+
 // Route::post('/menu-levels', [MenuLevelController::class, 'Get_Data_Level'])->middleware('auth:sanctum');
 // Route::post('/setting-menu-users', [SettingMenuUserController::class, 'Get_Data_Setting'])->middleware('auth:sanctum');
 // Route::put('/users/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');

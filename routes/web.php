@@ -99,7 +99,10 @@ Route::prefix('post')->group(function () {
     Route::delete('/{post}', [PostController::class, 'destroy'])->name('post.destroy');
 });
 
-Route::post('/post/{post_id}/like', [PostController::class, 'like'])->name('post.like');
+// routes/web.php
+Route::post('/post/like/{post}', [PostController::class, 'like'])->name('post.like');
+Route::delete('/post/unlike/{post}', [PostController::class, 'unlike'])->name('post.unlike');
+
 Route::post('/post/{post_id}/comment', [PostController::class, 'comment'])->name('comments.store');
 
 Route::prefix('messages')->group(function () {
@@ -122,10 +125,11 @@ Route::post('/{message_id}/update_draft', [MessageController::class,'updateDraft
 Route::get('/download/document/{file}', [MessageController::class, 'downloadDocument'])->name('download.document');
 
 Route::get('/gempa', [BmkgController::class, 'gempa']);
+Route::get('/cuaca', [BmkgController::class, 'cuaca']);
 
-Route::get('/cuaca', function () {
-    return view('bmkg.cuaca');
-})->name('cuaca')->middleware('auth');
+// Route::get('/cuaca', function () {
+//     return view('bmkg.cuaca');
+// })->name('cuaca')->middleware('auth');
 
 Route::get('/login', [AuthController::class, 'indexlogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');

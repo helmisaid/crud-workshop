@@ -11,17 +11,38 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
 
+
     public function getPosts()
     {
         $posts = Post::with('comments.user') // Eager load comments and their associated users
-        ->orderBy('create_date', 'desc')
-        ->get();
+            ->orderBy('create_date', 'desc')
+            ->get()
+            ->map(function($post) {
+                // Hitung jumlah like untuk setiap postingan
+                $post->likes_count = PostLike::where('post_id', $post->post_id)->count();
 
+                // Cek apakah pengguna yang sedang login sudah menyukai postingan ini
+                $post->user_liked = PostLike::where('post_id', $post->post_id)
+                    ->where('user_id', Auth::id())
+                    ->exists(); // Menggunakan exists() untuk menghindari mengambil data yang tidak diperlukan
+
+                // Jika tidak ada entri, set user_liked ke false
+                if (!$post->user_liked) {
+                    $post->user_liked = false; // Kembalikan false jika tidak ada like oleh user yang sedang login
+                } else {
+                    $post->user_liked = true; // Kembalikan true jika ada like oleh user yang sedang login
+                }
+
+                return $post;
+            });
+
+        // Format tanggal untuk setiap postingan
         foreach ($posts as $post) {
             if (Carbon::parse($post->create_date)->isToday()) {
                 $post->formatted_date = 'Hari ini, ' . Carbon::parse($post->create_date)->format('H:i');
@@ -30,8 +51,10 @@ class PostController extends Controller
             }
         }
 
-        return response()->json($posts);
+        return response()->json($posts); // Kembalikan data dalam format JSON
     }
+
+
 
     public function index()
     {
@@ -95,6 +118,34 @@ class PostController extends Controller
 }
 
 
+// public function update(Request $request, $id)
+// {
+//     $post = Post::findOrFail($id);
+
+//     $request->validate([
+//         'message_text' => 'required|string',
+//         'post_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+//     ]);
+
+//     $post->message_text = $request->input('message_text');
+
+//     if ($request->hasFile('post_image')) {
+//         // Hapus gambar lama jika ada
+//         if ($post->post_image) {
+//             Storage::delete('public/' . $post->post_image);
+//         }
+//         // Simpan gambar baru
+//         $path = $request->file('post_image')->store('posts', 'public');
+//         $post->post_image = $path;
+//     }
+
+//     $post->save();
+
+//     return redirect()->route('posts.list')->with('success', 'Post updated successfully!');
+// }
+
+
+
 public function destroy($post_id)
 {
     // Tambahkan ini untuk memeriksa ID yang diterima
@@ -111,6 +162,45 @@ public function destroy($post_id)
     } else {
         return redirect()->route('post.index')->with(['error' => 'Postingan tidak ditemukan!']);
     }
+}
+
+public function like($postId)
+{
+
+    $post = Post::findOrFail($postId);
+    $like = new PostLike();
+    $like->post_id = $postId;
+    $like->user_id = Auth::id();
+    $like->create_by = Auth::id();// Atur user_id sesuai pengguna yang login
+    $like->save();
+
+    // Hitung jumlah like setelah disimpan
+    $likes_count = $post->likes()->count();
+
+    return redirect()->route('post.index');
+
+}
+
+public function unlike($postId)
+{
+    // Temukan postingan berdasarkan ID
+    $post = Post::findOrFail($postId);
+
+    // Temukan like yang sesuai dengan post_id dan user_id
+    $like = PostLike::where('post_id', $postId)
+                    ->where('user_id', Auth::id())
+                    ->first();
+
+    // Jika like ditemukan, hapus
+    if ($like) {
+        $like->delete();
+    }
+
+    // Hitung jumlah like setelah dihapus
+    $likes_count = $post->likes()->count();
+
+    // Kembalikan respon JSON dengan jumlah like yang diperbarui
+    return redirect()->route('post.index');
 }
 
 // public function like($id)

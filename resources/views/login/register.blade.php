@@ -25,16 +25,18 @@
         <div class="content-wrapper d-flex align-items-center auth px-0">
           <div class="row w-100 mx-0">
             <div class="col-lg-4 mx-auto">
-              <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-                <div class="brand-logo">
-                  <img src="{{ asset('assets/images/logo.svg') }}" alt="logo">
+              <div class="rounded text-left py-5 px-4 px-sm-5 shadow border ">
+                <div class="d-flex justify-content-center py-2">
+                  <a href="{{ route('login') }}" class="logo d-flex align-items-center justify-content-center pb-2">
+                      <img src="{{ asset('assets/images/faviconwelife.png') }}" alt="Logo Perpustakaan Nasional" style="width: 20%; height: auto;">
+                  </a>
                 </div>
-                <h4>New here?</h4>
-                <h6 class="font-weight-light">Signing up is easy. It only takes a few steps</h6>
+                <h4>Register dulu bro</h4>
+                <h6 class="font-weight-light"></h6>
                 <form class="pt-3" method="POST" action="{{ route('register.post') }}">
                   @csrf
                   <div class="form-group">
-                    <input type="text" class="form-control form-control-lg" id="nama_user" name="nama_user" placeholder="Nama Lengkap" required>
+                    <input type="text" class="form-control form-control-lg" id="nama_user" name="nama_user" placeholder="Full name" required>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control form-control-lg" id="username" name="username" placeholder="Username" required>
@@ -51,15 +53,12 @@
                     <i class="mdi mdi-eye-off position-absolute" id="togglePasswordConfirmation" style="top: 50%; right: 10px; cursor: pointer;"></i>
                   </div>
                   <div class="mb-4">
-                    <div class="form-check">
-                      <label class="form-check-label text-muted">
-                        <input type="checkbox" class="form-check-input" required> I agree to all Terms & Conditions </label>
-                    </div>
+
                   </div>
                   <div class="mt-3 d-grid gap-2">
                     <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">SIGN UP</button>
                   </div>
-                  <div class="text-center mt-4 font-weight-light"> Already have an account? <a href="{{ route('login') }}" class="text-primary">Login</a>
+                  <div class="text-center mt-4 font-weight-light"> Sudah punya akun? <a href="{{ route('login') }}" class="text-primary">Login</a>
                   </div>
                 </form>
               </div>
@@ -90,7 +89,7 @@
             icon: 'success',
             confirmButtonText: 'OK'
         });
-    @endif
+      @endif
 
       const togglePassword = document.querySelector('#togglePassword');
       const password = document.querySelector('#password');
@@ -114,8 +113,6 @@
         this.classList.toggle('mdi-eye-off');
       });
 
-      // Tambahkan sweetalert untuk login berhasil
-     
     </script>
   </body>
 </html>

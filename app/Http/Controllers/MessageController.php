@@ -180,9 +180,9 @@ public function store(Request $request)
 }
 // In app/Http/Controllers/MessageController.php
 
-public function show($id)
+public function show($message)
 {
-    $message = Message::with(['recipients', 'category', 'documents'])->findOrFail($id);
+    $message = Message::with(['recipients', 'category', 'documents'])->findOrFail($message);
 
     if ($message->sender !== Auth::user()->email) {
         abort(403, 'You do not have permission to view this message.');

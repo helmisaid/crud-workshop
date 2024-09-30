@@ -31,6 +31,8 @@
                         <li>
                             <strong>{{ $message->subject }}</strong> - {{ $message->sender }}
                             <a href="{{ route('messages.show', $message->message_id) }}">View</a>
+                            <strong>{{ $message->subject }}</strong> - {{ $message->sender }}
+                            <a href="{{ route('messages.show', $message->message_id) }}">View</a>
                         </li>
                     @endforeach
                 </ul>
